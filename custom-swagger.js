@@ -13,7 +13,7 @@ function buildFormData(data) {
 }
 
 function getAuth() {
-  return window.ui.authSelectors.authorized().toJS()?.bearer;
+  return window.ui.authSelectors.authorized().toJS()?.OAuth2;
 }
 
 function tryRefreshOauth2Token() {
