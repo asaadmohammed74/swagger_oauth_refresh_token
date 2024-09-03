@@ -167,7 +167,7 @@ function patchRefreshHook() {
   }
 
   console.log('Patching OAuth token refresh hook...');
-  const origAuthorizeOauth2 = window.ui.authActions.authorizeOauth2;
+  origAuthorizeOauth2 = window.ui.authActions.authorizeOauth2;
 
   window.ui.authActions.authorizeOauth2 = authorizeOauth2Hook;
 
