@@ -123,27 +123,7 @@ function startClock() {
   tick();
 }
 
-let patchTries = 10;
-function patchRefreshHook() {
-  if (!window?.ui?.authActions?.authorizeOauth2) {
-    if (patchTries) {
-      patchTries--;
-      setTimeout(patchRefreshHook, 1000);
-      console.log(
-        'Missing patch target function "window.ui.authActions.authorizeOauth2", retrying in 1s...',
-      );
-      return;
-    }
-    console.log(
-      'Cannot patch OAuth token refresh hook. Missing patch target function "window.ui.authActions.authorizeOauth2"',
-    );
-    return;
-  }
-
-  console.log('Patching OAuth token refresh hook...');
-  const origAuthorizeOauth2 = window.ui.authActions.authorizeOauth2;
-
-  window.ui.authActions.authorizeOauth2 = (payload) => {
+function authorizeOauth2Hook(payload) {
     // If the token can expire and has a refresh token, schedule a token refresh and update the timer
     if (payload.token.expires_in && payload.token.refresh_token) {
       const tokenRefreshTimeout = payload.token.expires_in * 750;
@@ -165,7 +145,29 @@ function patchRefreshHook() {
     }
 
     return origAuthorizeOauth2(payload);
-  };
+}
+
+let patchTries = 10;
+function patchRefreshHook() {
+  if (!window?.ui?.authActions?.authorizeOauth2) {
+    if (patchTries) {
+      patchTries--;
+      setTimeout(patchRefreshHook, 1000);
+      console.log(
+        'Missing patch target function "window.ui.authActions.authorizeOauth2", retrying in 1s...',
+      );
+      return;
+    }
+    console.log(
+      'Cannot patch OAuth token refresh hook. Missing patch target function "window.ui.authActions.authorizeOauth2"',
+    );
+    return;
+  }
+
+  console.log('Patching OAuth token refresh hook...');
+  const origAuthorizeOauth2 = window.ui.authActions.authorizeOauth2;
+
+  window.ui.authActions.authorizeOauth2 = authorizeOauth2Hook;
 
   startClock();
 }
@@ -173,11 +175,13 @@ function patchRefreshHook() {
 patchRefreshHook();
 
 document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function () {
   var initialOAuth = getAuth();  
 
   if (!initialOAuth) {
     return;
   }
 
-  window.ui.authActions.authorizeOauth2(initialOAuth)
+  authorizeOauth2Hook(initialOAuth)
+  }, 500)
 })
