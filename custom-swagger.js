@@ -172,7 +172,7 @@ function patchRefreshHook() {
 
 patchRefreshHook();
 
-document.addEventListener("DOMContentLoaded, function() {
+document.addEventListener("DOMContentLoaded", function() {
   var initialOAuth = getAuth();  
 
   if (!initialOAuth) {
