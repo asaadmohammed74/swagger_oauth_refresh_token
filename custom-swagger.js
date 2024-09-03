@@ -172,7 +172,7 @@ function patchRefreshHook() {
 
 patchRefreshHook();
 
-document.onload = function() {
+document.addEventListener("DOMContentLoaded, function() {
   var initialOAuth = getAuth();  
 
   if (!initialOAuth) {
@@ -180,4 +180,4 @@ document.onload = function() {
   }
 
   window.ui.authActions.authorizeOauth2(initialOAuth)
-}
+})
