@@ -123,6 +123,8 @@ function startClock() {
   tick();
 }
 
+var origAuthorizeOauth2 = null;
+
 function authorizeOauth2Hook(payload) {
     // If the token can expire and has a refresh token, schedule a token refresh and update the timer
     if (payload.token.expires_in && payload.token.refresh_token) {
