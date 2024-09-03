@@ -172,7 +172,7 @@ function patchRefreshHook() {
 
 patchRefreshHook();
 
-window.onload = function() {
+document.onload = function() {
   var initialOAuth = getAuth();  
 
   if (!initialOAuth) {
