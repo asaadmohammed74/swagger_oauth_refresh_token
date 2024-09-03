@@ -171,3 +171,13 @@ function patchRefreshHook() {
 }
 
 patchRefreshHook();
+
+window.onload = function() {
+  var initialOAuth = getAuth();  
+
+  if (!initialOAuth) {
+    return;
+  }
+
+  window.ui.authActions.authorizeOauth2(initialOAuth)
+}
